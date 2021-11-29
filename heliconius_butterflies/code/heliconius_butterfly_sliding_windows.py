@@ -244,6 +244,9 @@ nd_populations=["pop2"]
 nextReport=args.report
 windows_tested=0
 
+#Minimum number of sites per window
+min_number_sites=3000
+
 populations=["pop1","pop2","pop3","outgroup"]
 
 #Open outfile
@@ -276,13 +279,15 @@ with gzip.open(args.infile,"rt") as file:
     number_of_sites+=1
     #Is a new window needed?
     if spline[0] != scaffold or int(spline[1]) > (window_start + args.window_size - 1):
-      #Calculate the stats for the window
-      intro_stats=calculate_introgression_stats(stats_components,statistics_list)
-      #Write new results to outfile
-      outline="{}\t".format("\t".join([scaffold,str(window_start),str(window_start + args.window_size - 1),str(args.window_size),str(number_of_sites)]))
-      outline+="{}\t".format("\t".join([str(intro_stats[key]) for key in statistics_list]))
-      outline+="\t".join([str(nd_stats["{}_pi".format(key)]) for key in nd_populations])
-      fout.write("{}\n".format(outline))
+      #Are there enough sites in the window
+      if number_of_sites >= min_number_sites:
+        #Calculate the stats for the window
+        intro_stats=calculate_introgression_stats(stats_components,statistics_list)
+        #Write new results to outfile
+        outline="{}\t".format("\t".join([scaffold,str(window_start),str(window_start + args.window_size - 1),str(args.window_size),str(number_of_sites)]))
+        outline+="{}\t".format("\t".join([str(intro_stats[key]) for key in statistics_list]))
+        outline+="\t".join([str(nd_stats["{}_pi".format(key)]) for key in nd_populations])
+        fout.write("{}\n".format(outline))
       #Restart the variables
       number_of_sites=0
       stats_components=defaultdict(int)

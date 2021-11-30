@@ -28,13 +28,13 @@ outfile="../results/helico_pop-pi_stats.csv"
 
 population_string="pop1[ag108,ag572,ag112,ag569];pop2[am216,am160,am48,am293];pop3[tiP86,tiP313,tiP84,tiP57];outgroup[hec273,eth67,ser202,par371]"
 
-python3 heliconius_butterfly_sliding_windows_LLF.py -i ${infile} -o ${outfile} --d_statistic --dplus_statistic --fd_statistic --fdm_statistic --df_statistic -ws 5000 -p ${population_string}
+python3 heliconius_butterfly_sliding_windows.py -i ${infile} -o ${outfile} --d_statistic --dplus_statistic --fd_statistic --fdm_statistic --df_statistic -ws 5000 -p ${population_string}
 
 #Graph the results
 results_infile="../results/helico_pop-pi_stats.csv"
 outfile_path="../results/graphs"
 
-python3 graph_butterfly_figures_LLF.py -i ${results_infile} -o ${graphs_outfile_path}
+python3 graph_butterfly_figures.py -i ${results_infile} -o ${graphs_outfile_path}
 
 
 

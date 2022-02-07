@@ -81,3 +81,23 @@ plt.tight_layout()
 plt.savefig("{}.svg".format(figure_seven_outfile),dpi=dpi_size)
 plt.savefig("{}.png".format(figure_seven_outfile),dpi=dpi_size)
 fig.clear()
+
+
+###Supplementary Figure 2
+supplementary_figure_two="{}".format(args.outfile)
+stat="Dancestral"
+fix, ax = plt.subplots(figsize=(10, 5))
+
+sns.scatterplot((x="pop2_pi",y=stat,data=df,alpha=0.05,color="black",s=50)
+sns.scatterplot(x="pop2_pi",y=stat,data=hmb,alpha=1,markers='o',edgecolor='red',marker="$\circ$"
+               ,facecolors='none',s=60)
+sns.scatterplot(x="pop2_pi",y=stat,data=hmyb,alpha=1,markers='o',edgecolor='yellow',marker="$\circ$"
+               ,facecolors='none',s=60)
+
+ax.set_xlabel(x_title,fontdict=font)
+ax.set_ylabel(r"$D_{ancestral}$",fontdict=font)
+plt.tight_layout()
+plt.savefig("{}.svg".format(supplementary_figure_two),dpi=dpi_size)
+plt.savefig("{}.png".format(supplementary_figure_two),dpi=dpi_size)
+fig.clear()
+

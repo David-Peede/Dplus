@@ -109,6 +109,10 @@ def update_introgression_stats_sums(p_one,p_two,p_three,p_four,list):
     dict["dplus_numerator"]+=(p_one*(1-p_two)*(1-p_three)*(1-p_four))-((1-p_one)*p_two*(1-p_three)*(1-p_four))
     dict["dplus_denominator"]=((1-p_one)*p_two*p_three*(1-p_four))+(p_one*(1-p_two)*p_three*(1-p_four))
     dict["dplus_denominator"]+=(p_one*(1-p_two)*(1-p_three)*(1-p_four))+((1-p_one)*p_two*(1-p_three)*(1-p_four))
+  if "Dancestral" in list:
+    #D+ statistic
+    dict["dancestral_numerator"]=(p_one*(1-p_two)*(1-p_three)*(1-p_four))-((1-p_one)*p_two*(1-p_three)*(1-p_four))
+    dict["dancestral_denominator"]=(p_one*(1-p_two)*(1-p_three)*(1-p_four))+((1-p_one)*p_two*(1-p_three)*(1-p_four))
   if "fD" in list:
     #fD statistic
     dict["fd_numerator"]=((1-p_one)*p_two*p_three*(1-p_four)) - (p_one*(1-p_two)*p_three*(1-p_four))
@@ -145,6 +149,12 @@ def calculate_introgression_stats(dict,statistics):
       results["D+"]=dict["dplus_numerator"]/dict["dplus_denominator"]
     except ZeroDivisionError:
       results["D+"]=np.nan
+  if "Dancestral" in statistics:
+    #Dancestral statistic
+    try:
+      results["Dancestral"]=dict["dancestral_numerator"]/dict["dancestral_denominator"]
+    except ZeroDivisionError:
+      results["Dancestral"]=np.nan
   if "fD" in statistics:
     #fD statistic
     try:
@@ -203,6 +213,7 @@ parser.add_argument("-o","--outfile",type=str,help="Path to outfile.")
 parser.add_argument("-i","--infile",type=str,help="Path to data file.")
 
 parser.add_argument("--d_statistic",action="store_true",help="To run the D statistic add option.")
+parser.add_argument("--dancestral_statistic",action="store_true",help="To run the Dancestral statistic add option.")
 parser.add_argument("--dplus_statistic",action="store_true",help="To run the D+ statistic add option.")
 parser.add_argument("--fd_statistic",action="store_true",help="To run the fD statistic add option.")
 parser.add_argument("--fdm_statistic",action="store_true",help="To run the fDM statistic add option.")
@@ -238,14 +249,13 @@ if args.fdm_statistic:
 #Do df
 if args.df_statistic:
   statistics_list.append("df")
-
+#Do Dancestral
+if args.dancestral_statistic:
+  statistics_list.append("dancestral")
 nd_populations=["pop2"]
 
 nextReport=args.report
 windows_tested=0
-
-#Minimum number of sites per window
-min_number_sites=3000
 
 populations=["pop1","pop2","pop3","outgroup"]
 
@@ -279,15 +289,13 @@ with gzip.open(args.infile,"rt") as file:
     number_of_sites+=1
     #Is a new window needed?
     if spline[0] != scaffold or int(spline[1]) > (window_start + args.window_size - 1):
-      #Are there enough sites in the window
-      if number_of_sites >= min_number_sites:
-        #Calculate the stats for the window
-        intro_stats=calculate_introgression_stats(stats_components,statistics_list)
-        #Write new results to outfile
-        outline="{}\t".format("\t".join([scaffold,str(window_start),str(window_start + args.window_size - 1),str(args.window_size),str(number_of_sites)]))
-        outline+="{}\t".format("\t".join([str(intro_stats[key]) for key in statistics_list]))
-        outline+="\t".join([str(nd_stats["{}_pi".format(key)]) for key in nd_populations])
-        fout.write("{}\n".format(outline))
+      #Calculate the stats for the window
+      intro_stats=calculate_introgression_stats(stats_components,statistics_list)
+      #Write new results to outfile
+      outline="{}\t".format("\t".join([scaffold,str(window_start),str(window_start + args.window_size - 1),str(args.window_size),str(number_of_sites)]))
+      outline+="{}\t".format("\t".join([str(intro_stats[key]) for key in statistics_list]))
+      outline+="\t".join([str(nd_stats["{}_pi".format(key)]) for key in nd_populations])
+      fout.write("{}\n".format(outline))
       #Restart the variables
       number_of_sites=0
       stats_components=defaultdict(int)

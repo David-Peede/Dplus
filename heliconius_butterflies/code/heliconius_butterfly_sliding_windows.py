@@ -231,7 +231,7 @@ args=parser.parse_args()
 
 #args.window_size=5000;args.report=100
 #args.population_string="pop1[ag108,ag572,ag112,ag569];pop2[am216,am160,am48,am293];pop3[tiP86,tiP313,tiP84,tiP57];outgroup[hec273,eth67,ser202,par371]"
-#args.test=True;args.d_statistic=True
+#args.test=True;args.d_statistic=True;args.dancestral_statistic=True
 
 statistics_list=[]
 #Do D
@@ -251,7 +251,7 @@ if args.df_statistic:
   statistics_list.append("df")
 #Do Dancestral
 if args.dancestral_statistic:
-  statistics_list.append("dancestral")
+  statistics_list.append("Dancestral")
 nd_populations=["pop2"]
 
 nextReport=args.report

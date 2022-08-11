@@ -287,7 +287,7 @@ with gzip.open(args.vcf_file,"rt") as file:
     #Is a new window needed?
     if (pos > (window_start + args.window_size - 1)):
       #Write new results to outfile
-      outline="{}".format(outfile_delim.join([str(args.f),str(args.seed),str(window_start),str(window_start + args.window_size - 1),str(args.window_size),str(number_of_sites)]))
+      outline=outfile_delim.join([str(args.f),str(args.seed),str(window_start),str(window_start + args.window_size - 1),str(args.window_size),str(number_of_sites)])
       if args.use_haplotype:
         stats_dict=calculate_introgression_stats(site_dict,statistics_list)
         outline+="{}{}".format(outfile_delim,outfile_delim.join([str(site_dict[key]) for key in sites]))
